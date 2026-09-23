@@ -1,0 +1,34 @@
+---
+description: How to build, test, and run goURL safely
+globs: "{Makefile,Dockerfile,docker-compose*,**/*_test.go}"
+alwaysApply: false
+---
+
+# Build and test
+
+## Default (no local Go)
+
+```sh
+make test    # race detector
+make vet
+make fmt
+make build   # writes ./gourl (gitignored)
+make image && make run
+```
+
+`ENGINE=podman` works. Cache lives in ignored `.cache/`.
+
+## Local Go 1.26+
+
+```sh
+go test -race ./...
+go run ./cmd/gourl --data-dir ./data --timeout 30s
+```
+
+## Docker run notes
+
+Always `-it` and `-e TERM`. Named volume `gourl-data:/data`. Linux host APIs: `--network host` or `host.docker.internal`. Image user UID 10001.
+
+## Safety
+
+Never commit `data/`, `.cache/`, or real tokens. Corrupt `state.json` must fail startup — do not auto-overwrite.

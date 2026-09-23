@@ -1,0 +1,16 @@
+---
+description: tview TUI patterns for the request editor and dialogs
+globs: "internal/ui/**/*.go"
+alwaysApply: false
+---
+
+# UI (tview) conventions
+
+- Central type is `UI` in `app.go`. Wire keys in `input`; keep footer/README shortcuts in sync.
+- Async HTTP: send on a goroutine, deliver via `results` channel, drain in `BeforeDraw`/`receive`. One request at a time; `cancel` for Ctrl+X.
+- Dirty tracking: compare editor draft to `baseline`; confirm before quit/load when unsaved.
+- Layout: sidebar list when wide enough; narrow terminals use F2 full-width list (see `layout`).
+- Environments: modal flows in `environments.go`; Escape backs out of dialogs.
+- Do not enable tview dynamic colors on response/status text (`SafeText` strips controls).
+- Prefer small methods on `*UI` over new packages unless the surface grows substantially.
+- After UX changes, extend `app_test.go` where logic is testable without a real terminal.

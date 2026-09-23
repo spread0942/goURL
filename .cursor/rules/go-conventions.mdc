@@ -1,0 +1,16 @@
+---
+description: Go conventions for gourl core and cmd packages
+globs: "**/*.go"
+alwaysApply: false
+---
+
+# Go conventions
+
+- Module path: `gourl`. Go 1.26. Prefer stdlib; existing deps are tcell/tview only.
+- Keep `internal/core` free of UI imports. Domain types live in `state.go`.
+- Errors: wrap with `%w` and short context (`fmt.Errorf("read state.json: %w", err)`).
+- Variable syntax: `{{name}}` via `variablePattern` in `client.go`. Single-pass only; never mutate the saved template when resolving.
+- Persistence: always atomic write (`CreateTemp` → sync → `Rename`) as in `store.go`. Reject unknown `state.Version`.
+- HTTP: require `http`/`https` + hostname; honor `MaxBody`; do not disable TLS verify.
+- Prefer table-driven tests in `*_test.go`; cover resolve, cancel, truncate, and store round-trips when touching those paths.
+- Style: match existing short names (`ui`, `dir`, `source`), early returns, no drive-by refactors.

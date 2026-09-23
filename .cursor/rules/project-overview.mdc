@@ -1,0 +1,26 @@
+---
+description: goURL product context, architecture, and scope boundaries
+alwaysApply: true
+---
+
+# goURL project
+
+Postman-like **terminal** HTTP client (Go + tview). Not a web server.
+
+## Packages
+
+- `cmd/gourl` — flags and bootstrap only
+- `internal/core` — pure domain (state, store, resolve, HTTP, pairs); no tview
+- `internal/ui` — TUI only; call into `core`, never reverse
+
+## Keep in scope
+
+Saved requests, environments/`{{variables}}`, send + cancel, response display (status, headers, body). Match README behavior and keybindings before inventing UX.
+
+## Out of scope unless asked
+
+OAuth, scripting, uploads, nested collections, Postman import/export, encrypting stored secrets.
+
+## When changing behavior
+
+Update README controls/features if user-visible. Prefer Docker Makefile targets for verify: `make test`, `make vet`, `make fmt`.
